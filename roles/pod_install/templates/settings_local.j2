@@ -1,0 +1,62 @@
+from django.utils.translation import ugettext_lazy as _
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': '{{ db_name}}',
+        'USER': '{{ db_user }}',
+        'PASSWORD': '{{ db_pwd }}',
+        'HOST': '{{ db_host }}',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET storage_engine=INNODB, sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1",
+        },
+    }
+}
+ES_URL = ['http://{{ elastic_host }}:9200/']
+
+{% if frontal == 'oui' %}
+ALLOWED_HOSTS = ['{{ allowed_long }}','{{ allowed_short}}']
+{% endif %}
+
+EMAIL_HOST = '{{ smtp_host}}'
+EMAIL_PORT = 25
+DEFAULT_FROM_EMAIL = '{{ default_email }}'
+SERVER_EMAIL = '{{ default_email }}'
+
+ADMINS = ( {{ admins }}  )
+USE_PODFILE = {{pod_file}}
+
+TIME_ZONE = '{{ tz }}'
+
+CELERY_TO_ENCODE = True # Active encode
+CELERY_BROKER_URL = "amqp://{{ rabbit_user }}:{{ rabbit_pwd }}@{{ rabbit_host }}/{{ rabbit_queue }}"             # Definit le message broker.
+
+{% if frontal == 'oui' and use_cas == True and use_establishment != True %}
+USE_CAS = {{ use_cas }}
+CAS_GATEWAY = {{ cas_gateway }}
+POPULATE_USER = '{{ populate }}'
+#CREATE_GROUP_FOM_AFFILIATION = True
+CAS_SERVER_URL = '{{ cas_url }}'
+LDAP_SERVER = {'url': '{{ ldap_serveur }}', 'port': {{ldap_port}}, 'use_ssl': {{ldap_ssl}}}
+AFFILIATION = {{ affiliation }}
+USER_LDAP_MAPPING_ATTRIBUTES = {{ mapping }}
+AUTH_LDAP_USER_SEARCH = ('{{ ldap_user_search }}', "(uid=%(uid)s)")
+AUTH_LDAP_BIND_DN = '{{ bind_dn }}'
+AUTH_LDAP_BIND_PASSWORD = '{{ bind_pwd }}'
+{% endif %}
+
+{% if frontal == 'oui' and use_cas == True  and use_establishment == True %}
+USE_CAS = {{ use_cas }}
+CAS_GATEWAY = {{ cas_gateway }}
+POPULATE_USER = '{{ populate }}'
+#CREATE_GROUP_FOM_AFFILIATION = True
+CAS_SERVER_URL = '{{ cas_url }}'
+LDAP_SERVER = {'url': '{{ ldap_serveur }}', 'port': {{ldap_port}}, 'use_ssl': {{ldap_ssl}}}
+AFFILIATION = {{ affiliation }}
+USER_LDAP_MAPPING_ATTRIBUTES = {{ mapping }}
+USE_ESTABLISHMENT_FIELD = True
+ESTABLISHMENT = {{establishment}}
+AUTH_LDAP_USER_SEARCH = ('{{ ldap_user_search }}', "(uid=%(uid)s)")
+AUTH_LDAP_BIND_DN = '{{ bind_dn }}'
+AUTH_LDAP_BIND_PASSWORD = '{{ bind_pwd }}'
+{% endif %}

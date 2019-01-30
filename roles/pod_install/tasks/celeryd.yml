@@ -1,0 +1,21 @@
+- name: init.d celeryd
+  copy:
+    src: ../files/celeryd
+    dest: /etc/init.d/celeryd
+    owner: root
+    group: root
+    mode: 0744
+  become: True
+
+- name: default celeryd
+  template:
+    src: ../templates/celeryd.j2
+    dest: /etc/default/celeryd
+    owner: root
+    group: root
+    mode: 0744
+  become: True
+
+- name: Start celeryd
+  shell: /etc/init.d/celeryd restart
+  become: True

@@ -1,0 +1,41 @@
+---
+# tasks file for pod_install
+
+    - include_tasks: "commun.yml"
+      tags:
+        - commun
+
+    - include_tasks: "settings.yml"
+      when: (frontal == 'oui' or encodage == 'oui')
+      tags:
+        - settings
+
+    - include_tasks: "base_mysql.yml"
+      when: (frontal == 'oui')
+      tags:
+        - first_install
+
+    - include_tasks: "rabbit.yml"
+      when: (frontal == 'oui')
+      tags:
+        - rabbit
+
+    - include_tasks: "elastic.yml"
+      when: (elastic == 'oui')
+      tags:
+        - elastic
+
+    - include_tasks: "lib_encode.yml"
+      when: (encodage == 'oui')
+      tags:
+        - encodage
+
+    - include_tasks: "celeryd.yml"
+      when: (encodage == 'oui')
+      tags:
+        - celery
+
+    - include_tasks: "nginx_uwsgi.yml"
+      when: (frontal == 'oui')
+      tags:
+        - nginx

@@ -1,0 +1,30 @@
+- name: install rabbit
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - rabbitmq-server
+  become: True
+
+- rabbitmq_vhost:
+    name: "{{ rabbit_queue}}"
+    state: present
+  become: True
+
+- rabbitmq_user:
+    user: "{{ rabbit_user }}"
+    password: "{{ rabbit_pwd }}"
+    permissions:
+      - vhost: "{{ rabbit_queue }}"
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+    tags: administrator
+    state: present
+  become: True
+
+- service:
+    name: rabbitmq-server
+    enabled: yes
+    state: restarted
+  become: True     

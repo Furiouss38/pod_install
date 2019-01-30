@@ -1,0 +1,34 @@
+- git:
+    clone: no
+    update: yes
+    force: yes
+    repo: "{{depot}}"
+    dest: "{{django_path}}"
+
+- name: "update frontal"
+  block:
+    - pip:
+        requirements: "{{requirements}}"
+        virtualenv: "{{venv_path}}/{{venv}}"
+      environment:
+        HTTP_PROXY: "http://{{proxy}}:{{proxy_port}}"
+        HTTPS_PROXY: "http://{{proxy}}:{{proxy_port}}"
+
+    - django_manage:
+        command:  makemigrations
+        app_path: "{{ django_path }}"
+        virtualenv: "{{ venv_path }}/{{ venv }}"
+    - django_manage:
+        command: migrate
+        app_path: "{{ django_path }}"
+        virtualenv: "{{ venv_path }}/{{ venv }}"
+    - django_manage:
+        command: collectstatic
+        app_path: "{{ django_path }}"
+        virtualenv: "{{ venv_path }}/{{ venv }}"
+
+    - service:
+        name: uwsgi-pod
+        state: restarted
+      become: True
+  when: frontal == 'oui'

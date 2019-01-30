@@ -1,0 +1,50 @@
+---
+# vars file for pod_install
+[pod]
+frontal1.domaine.fr state=present frontal='oui' db_host='127.0.0.1' rabbit_host='localhost' allowed_long='frontal1.domaine.fr' allowed_short='frontal1'  encodage='non' elastic_host='elastic1' elastic_ip='2.2.2.2' elastic='non'
+encode1.domaine.fr state=present encodage='oui' frontal='non' elastic='non' db_host='1.1.1.1' rabbit_host='1.1.1.1' elastic_host='frontal1' elastic_ip='2.2.2.2'
+elastic1.domaine.fr state=present elastic='oui'
+
+
+[pod:vars]
+#env=test
+depot=https://github.com/esupportail/podv2.git
+venv_path=/data/.virtualenvs
+venv=django_pod
+django_path=/data/django/podv2
+requirements=/data/django/podv2/requirements.txt
+user=pod
+group=pod
+pip3=/usr/bin/pip3
+proxy=proxy.domaine.fr
+proxy_port=3128
+db_name=pod
+db_user=pod
+db_pwd=password
+elastic_host=elastic.domaine.fr
+rabbit_user=pod
+rabbit_pwd=rabbitpwd
+rabbit_queue=rabbitpod
+use_cas=True
+cas_gateway=True
+populate=LDAP
+cas_url=https://cas.domaine.fr
+ldap_serveur=ldap.domaine.fr
+ldap_port=389
+ldap_ssl=False
+admins= "('prenom nom', 'prenom.nom@.fr')"
+default_email=noreply@pod-web-test.grenet.fr
+affiliation=( ('student', _('student')), ('faculty', _('faculty')), ('staff', _('staff')), ('employee', _('employee')), ('member', _('member')), ('affiliate', _('affiliate')), ('alum', _('alum')), ('library-walk-in', _('library-walk-in')), ('researcher', _('researcher')), ('retired', _('retired')), ('emeritus', _('emeritus')), ('teacher', _('teacher')), ('registered-reader', _('registered-reader')) )
+mapping={ "uid": "uid", "mail": "mail", "last_name": "sn", "first_name": "givenname", "affiliation": "eduPersonAffiliation" }
+bind_dn=''
+bind_pwd=''
+ldap_user_search=''
+logs=/var/log/pod
+pod_file=True
+
+[all:vars]
+ansible_connection=ssh
+ansible_user=pod
+ansible_ssh_private_key_file=chemin complet vers clé privée
+smtp_host=smtp.domaine.fr
+tz=Europe/Paris

@@ -1,0 +1,9 @@
+- name: install ffmpeg & co
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - ffmpeg
+    - ffmpegthumbnailer
+    - imagemagick
+  become: True

@@ -1,0 +1,66 @@
+- name: install reqs
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - openjdk-8-jre
+    - apt-transport-https
+    - curl
+  become: True
+
+- name: cle gpg elastic
+  shell: "wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch |  apt-key add -"
+  environment:
+    HTTP_PROXY: "http://{{proxy}}:{{proxy_port}}"
+    HTTPS_PROXY: "http://{{proxy}}:{{proxy_port}}"
+  become: True
+
+- name: Repo elastic
+  apt_repository:
+    filename: /etc/apt/sources.list.d/elastic-6.x.list
+    repo: deb https://artifacts.elastic.co/packages/6.x/apt stable main
+    state: present
+  become: True
+
+- name: install elastic
+  apt:
+    name: elasticsearch
+    state: present
+  become: True
+
+- name: elasticsearch.yml
+  blockinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    block:  |
+      cluster.name: pod-application
+      node.name: pod-1
+      discovery.zen.ping.unicast.hosts: ["127.0.0.1","{{elastic_host}}"]
+      network.host: ["{{ elastic_ip }}","127.0.0.1"]
+  become: True
+
+- name: plugin elastic ICU
+  elasticsearch_plugin:
+    name: analysis-icu
+    state: present
+  environment:
+    ES_JAVA_OPTS: -Dhttp.proxyHost={{proxy}} -Dhttp.proxyPort={{proxy_port}} -Dhttps.proxyHost={{proxy}} -Dhttps.proxyPort={{proxy_port}}
+  become: True
+
+- service:
+    name: elasticsearch
+    state: restarted
+    enabled: yes
+  become: True
+
+- name: Wait for port 9200 to become open on the host, don't start checking for 10 seconds
+  wait_for:
+    port: 9200
+    delay: 10
+
+- django_manage:
+    command: create_pod_index
+    app_path: "{{ django_path }}"
+    virtualenv: "{{ venv_path }}/{{ venv }}"
+  environment:
+    HTTP_PROXY: ""
+    HTTPS_PROXY: ""

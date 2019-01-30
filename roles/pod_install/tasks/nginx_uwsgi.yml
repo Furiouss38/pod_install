@@ -1,0 +1,78 @@
+- name: install nginx
+  apt:
+      name: "{{packages}}"
+  vars:
+    packages:
+    - nginx
+    - nginx-extras
+  become: True
+
+- file:
+    path: "/etc/nginx/sites-enabled/default"
+    state: absent
+  become: True
+
+- name: progressbar
+  lineinfile:
+    path: /etc/nginx/nginx.conf
+    insertafter: "http {"
+    line: "upload_progress uploadp 1m;"
+  become: True
+
+- name: pod_ngninx
+  template:
+    src: "../templates/pod_nginx.j2"
+    dest: "{{django_path}}/pod/custom/pod_nginx.conf"
+    owner: "{{user}}"
+    group: "{{group}}"
+    mode: 0744
+
+- file:
+   src: "{{django_path}}/pod/custom/pod_nginx.conf"
+   dest: "/etc/nginx/sites-enabled/pod_nginx.conf"
+   state: link
+  become: True
+
+- service:
+    name: nginx
+    state: restarted
+    enabled: yes
+  become: True
+
+- pip:
+    name: uwsgi
+    executable: "{{pip3}}"
+  environment:
+    HTTP_PROXY: "http://{{proxy}}:{{proxy_port}}"
+    HTTPS_PROXY: "http://{{proxy}}:{{proxy_port}}"
+  become: True
+
+- name: uwsgi-pod
+  template:
+    src: "../templates/uwsgi-pod.j2"
+    dest: /etc/systemd/system/uwsgi-pod.service
+    owner: root
+    group: root
+    mode: 0744
+  become: True
+
+- name: pod_ngninx
+  template:
+    src: "../templates/pod_uwsgi.j2"
+    dest: "{{django_path}}/pod/custom/pod_uwsgi.ini"
+    owner: "{{user}}"
+    group: "{{group}}"
+    mode: 0644
+
+- service:
+    name: uwsgi-pod
+    state: restarted
+    enabled: yes
+  become: True
+
+- django_manage:
+    command: collectstatic
+    app_path: "{{ django_path }}"
+    virtualenv: "{{ venv_path }}/{{ venv }}"
+  tags:
+    - first_install

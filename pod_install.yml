@@ -1,0 +1,6 @@
+---
+# tasks file for pod_install
+- hosts: "{{serveurs}}"
+
+  roles:
+    - { role: pod_install }
