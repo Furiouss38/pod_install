@@ -16,3 +16,12 @@ Le rabbitmq est forcément installé sur 1 frontal
 La bdd est sur le frontal dans l'exemple (d'où le db_host à 127.0.0.1) mais ça pourrait être sur un autre serveur sans soucis  
 
 Là où j'ai mis des IP (1.1.1.1 ou 2.2.2.2) faut bien mettre des IP sinon ça ne fonctionne pas avec des noms DNS dans la conf de certains services.  
+
+
+### Lancer une install :
+
+/usr/local/bin/ansible-playbook  -i inventory.yml -e serveurs=pod pod_install.yml
+
+### Lancer une update :
+
+/usr/local/bin/ansible-playbook  -i inventory.yml -e serveurs=pod pod_update.yml
