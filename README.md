@@ -19,9 +19,9 @@ Là où j'ai mis des IP (1.1.1.1 ou 2.2.2.2) faut bien mettre des IP sinon ça n
 
 Le createsuperuser est à faire à la main après depuis un frontal
 
-**/!\  pour le repertoire media partagé entre le/les frontaux et le/les encodeurs il faut aller le faire à la main après /!\  
+** /!\  pour le repertoire media partagé entre le/les frontaux et le/les encodeurs il faut aller le faire à la main après /!\  
   
-/!\ les scripts sont prévus pour fonctionner dans une infra qui accéde à internet avec un proxy, je n'ai pas encore rendu ce paramètre optionel faute de temps /!\**  
+/!\ les scripts sont prévus pour fonctionner dans une infra qui accéde à internet avec un proxy, je n'ai pas encore rendu ce paramètre optionel faute de temps /!\ **  
 
 ### Lancer une install :
 
