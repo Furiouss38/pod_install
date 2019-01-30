@@ -13,10 +13,15 @@ Chaque serveur peut être plusieurs choses : frontal, elastic ou encodage ('oui'
 
 Le rabbitmq est forcément installé sur 1 frontal  
 
-La bdd est sur le frontal dans l'exemple (d'où le db_host à 127.0.0.1) mais ça pourrait être sur un autre serveur sans soucis  
+La bdd est sur le frontal dans l'exemple (d'où le db_host à 127.0.0.1) mais ça pourrait être sur un autre serveur sans soucis (le role ansible n'installe pas mysql et ne crée pas la base vide que le create_database.sh de pod rempli il faut que ça soit installer avant)  
 
 Là où j'ai mis des IP (1.1.1.1 ou 2.2.2.2) faut bien mettre des IP sinon ça ne fonctionne pas avec des noms DNS dans la conf de certains services.  
 
+Le createsuperuser est à faire à la main après depuis un frontal
+
+**/!\  pour le repertoire media partagé entre le/les frontaux et le/les encodeurs il faut aller le faire à la main après /!\  
+  
+/!\ les scripts sont prévus pour fonctionner dans une infra qui accéde à internet avec un proxy, je n'ai pas encore rendu ce paramètre optionel faute de temps /!\**  
 
 ### Lancer une install :
 
