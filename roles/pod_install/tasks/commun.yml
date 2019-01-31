@@ -92,13 +92,12 @@
 - pip:
     requirements: "{{requirements}}"
     virtualenv: "{{venv_path}}/{{venv}}"
-    version: "1.3.13"
   environment:
     HTTP_PROXY: "http://{{proxy}}:{{proxy_port}}"
     HTTPS_PROXY: "http://{{proxy}}:{{proxy_port}}"
 
 - pip:
-    name: mysqlclient
+    name: mysqlclient==1.3.13
     virtualenv: "{{venv_path}}/{{venv}}"
   environment:
     HTTP_PROXY: "http://{{proxy}}:{{proxy_port}}"
